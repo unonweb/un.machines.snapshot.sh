@@ -123,13 +123,13 @@ function main {
 		echo "---"
 		echo -e "MACHINE: ${CYAN}${machine}${CLEAR}"
 
-		if is_value_in_array ${machine} EXCLUDE_MACHINES; then
-			echo "Machine ${machine} excluded. Skipping ..."
+		if ! is_value_in_array ${machine} INCLUDE_MACHINES; then
+			echo "Machine: ${machine} not included. Skipping ..."
 			continue
 		fi
 
-		if ! is_value_in_array ${machine} INCLUDE_MACHINES; then
-			echo "Machine: ${machine} not included. Skipping ..."
+		if is_value_in_array ${machine} EXCLUDE_MACHINES; then
+			echo "Machine ${machine} excluded. Skipping ..."
 			continue
 		fi
 		
