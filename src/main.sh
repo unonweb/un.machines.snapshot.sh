@@ -171,17 +171,22 @@ function main {
 		# Wait for the shutdown to complete
 		sleep 1s
 		local wait_count=0
-		while machinectl status "${machine}" &>/dev/null; do
-			# 0 if machine is running
-			# 1 if machine is not running
+
+		while true; do
+			if ! machinectl status "${machine}" &>/dev/null; then
+				echo "<6> ${machine} has stopped."
+				break
+			fi
+			
 			if ((wait_count == 6)); then
-				echo "Aborting operation on machine ${machine} after waiting ${wait_count} seconds."
+				echo "<3> Aborting operation on machine ${machine} after waiting ${wait_count} seconds."
 				skip_iteration=true
 				break
 			fi
-			echo "Waiting for ${machine} to complete shutdown ... (${wait_count})"
+			
+			echo "<6> Waiting for ${machine} to complete shutdown ... (${wait_count})"
 			((wait_count++))
-			sleep 1s
+			sleep 1
 		done
 
 		if ${skip_iteration}; then
