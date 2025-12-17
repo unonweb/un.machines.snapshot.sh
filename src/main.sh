@@ -1,10 +1,5 @@
 #!/bin/bash
 
-set -o errexit
-set -o pipefail
-#set -o nounset
-
-# script location
 export SCRIPT_PATH="$(readlink -f "${BASH_SOURCE}")"
 export SCRIPT_DIR=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
 export SCRIPT_DIR_NAME=$(dirname -- "$(readlink -f "${SCRIPT_DIR}")")
@@ -121,26 +116,26 @@ function main {
 		machine_path="${BASE_DIR}/${machine}"
 		
 		echo "---"
-		echo -e "MACHINE: ${CYAN}${machine}${CLEAR}"
+		echo -e "<6> MACHINE: ${CYAN}${machine}${CLEAR}"
 
 		if ! is_value_in_array ${machine} INCLUDE_MACHINES; then
-			echo "Machine: ${machine} not included. Skipping ..."
+			echo "<6> Machine: ${machine} not included. Skipping ..."
 			continue
 		fi
 
 		if is_value_in_array ${machine} EXCLUDE_MACHINES; then
-			echo "Machine ${machine} excluded. Skipping ..."
+			echo "<6> Machine ${machine} excluded. Skipping ..."
 			continue
 		fi
 		
 		if [ ! -d "${machine_path}" ]; then
-			echo "Not a directory: ${machine_path}"
+			echo "<3> Not a directory: ${machine_path}"
 			echo "Skipping ..."
 			continue
 		fi
 
 		if ! is_btrfs_subvolume ${machine_path}; then
-			echo "Not a btrfs subvolume: ${machine_path}"
+			echo "<3> Not a btrfs subvolume: ${machine_path}"
 			echo "Skipping ..."
 			continue
 		fi
@@ -149,10 +144,10 @@ function main {
 		subvol_name=""
 		subvol_name=$(btrfs subvolume show "${machine_path}" 2>/dev/null | grep "Name:" | awk '{print $2}')
 		if [[ -z ${subvol_name} ]]; then
-			echo "WARN: subvol_name is empty."
+			echo "<4> WARN: subvol_name is empty."
 		fi
 
-		echo -e "SUBVOL: ${CYAN}${subvol_name}${CLEAR}"
+		echo -e "<6> SUBVOL: ${CYAN}${subvol_name}${CLEAR}"
 
 		# Stop machine
 		if ((interactive_mode)); then
@@ -164,12 +159,12 @@ function main {
 				continue
 			fi
 		else
-			echo "Stopping container: ${machine} ..."
+			echo "<6> Stopping container: ${machine} ..."
 			machinectl stop "${machine}"
 		fi
 		
 		# Wait for the shutdown to complete
-		sleep 1s
+		sleep 1
 		local wait_count=0
 
 		while true; do
@@ -186,7 +181,7 @@ function main {
 			
 			echo "<6> Waiting for ${machine} to complete shutdown ... (${wait_count})"
 			((wait_count++))
-			sleep 1
+			sleep 2
 		done
 
 		if ${skip_iteration}; then
