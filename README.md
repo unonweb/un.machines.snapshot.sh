@@ -1,9 +1,24 @@
-# REQUIRES / EXPECTS
+CONFIG
+======
 
-- systemd-nspawn containers in /var/lib/machines
-- btrfs subvolumes in /var/lib/machines/<machine> for each container
+Path config file: `un.machines.snapshot/config.cfg`
+Vars:
 
-# NOTES
+```sh
+SNAPSHOTS_BASE="/.snapshots"
+SNAPSHOTS_MAX_NUM=7
+INCLUDE_MACHINES=()
+EXCLUDE_MACHINES=()
+```
+
+REQUIRES / EXPECTS
+==================
+
+- systemd-nspawn containers in `/var/lib/machines`
+- btrfs subvolumes in `/var/lib/machines/<machine>` for each container
+
+NOTES
+=====
 
 - Look for systemd-nspawn machines in /var/lib/machines
 - Snapshot them
