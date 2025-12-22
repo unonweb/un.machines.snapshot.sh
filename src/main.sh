@@ -79,7 +79,7 @@ function cleanup_snapshots { # ${snapshot_path}
 			# sort: oldest up, newest down
 			# head -n -3: exclude the last/the newest <num> files
 			echo "<6>Removing old snapshot: ${snapshot}"
-            rm -rf "${snapshot}"
+            btrfs subvolume delete "${snapshot}"
         done
 	fi
 }
