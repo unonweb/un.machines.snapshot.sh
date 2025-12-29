@@ -165,7 +165,7 @@ function main {
 			mkdir -p "${snapshots_dir}"
 		fi
 
-		btrfs subvol snapshot "${machine_path}" "${snapshot_path}"
+		btrfs subvol snapshot -r "${machine_path}" "${snapshot_path}"
 		
 		# Start the container again
 		echo "<6>Starting up container again: ${machine} ..."
